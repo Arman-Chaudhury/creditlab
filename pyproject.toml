@@ -1,0 +1,8 @@
+[project]
+name = "creditlab"
+version = "0.1.0"
+description = "Loan-level mortgage PD modeling on real Fannie Mae data, stress-tested through the 2008 crisis"
+requires-python = ">=3.11"
+dependencies = [
+    "pandas"
+]
