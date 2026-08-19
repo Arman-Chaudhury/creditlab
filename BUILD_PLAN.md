@@ -4,7 +4,7 @@
 
 ## Milestones
 
-- [ ] **Loader and synthetic fixtures** — Chunked, memory-bounded parser for Fannie Mae acquisition/performance file layouts with schema validation; deterministic synthetic fixture generator mirroring the schema so all tests run offline.
+- [x] **Loader and synthetic fixtures** — Chunked, memory-bounded parser for Fannie Mae acquisition/performance file layouts with schema validation; deterministic synthetic fixture generator mirroring the schema so all tests run offline. *(Done 2026-08-19: `creditlab/schema.py` — classic 25/31-column layouts, typed records; `creditlab/loader.py` — generator-based strict/lenient readers, gzip support, `chunked()`; `creditlab/fixtures.py` — seeded hazard-model generator with crisis multiplier, D90+ progressions, self-curing blips; 17 tests, stdlib-only.)*
 - [ ] **Default labels and vintage cohorts** — Construct D90+ (and D180) default-within-horizon labels from monthly performance records; group loans into origination-vintage cohorts.
 - [ ] **Feature engineering** — Origination features (FICO, LTV/CLTV, DTI, loan purpose, occupancy, property type, rate spread at origination), missing-value policy, leakage audit (no post-origination information in features).
 - [ ] **Logistic baseline with calibration** — Regularized logistic regression; reliability curves, Brier score, AUC, expected-vs-realized default rate by score decile.
