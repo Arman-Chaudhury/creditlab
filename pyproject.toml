@@ -3,9 +3,14 @@ name = "creditlab"
 version = "0.1.0"
 description = "Loan-level mortgage PD modeling on real Fannie Mae data, stress-tested through the 2008 crisis"
 requires-python = ">=3.11"
-# The loader and fixture generator are deliberately stdlib-only.
-# Modeling dependencies (numpy, scikit-learn, lightgbm) arrive with milestones 4-5.
-dependencies = []
+# Data layer (loader, labels, features, metrics) is deliberately stdlib-only;
+# numpy/scikit-learn exist solely to FIT the logistic baseline (inference is
+# plain arithmetic on the extracted artifact). lightgbm arrives with milestone 5
+# as an optional extra.
+dependencies = [
+    "numpy>=1.26",
+    "scikit-learn>=1.4",
+]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
