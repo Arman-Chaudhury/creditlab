@@ -57,6 +57,31 @@ proxy fairness audit]
 HTML/Markdown + CLI demo]
 ```
 
+## The headline experiment
+
+`creditlab.validation.crisis_validation` runs the same trainer through both
+protocols — the naive random split and the honest vintage-based out-of-time
+split (train ≤ 2006, validate on 2007–08 originations) — and reports them side
+by side. On the bundled synthetic fixtures (800 loans, seed 99; **not real
+data** — the real-data table lands with `creditlab demo` once you've
+downloaded a Fannie Mae quarter):
+
+| metric | random split (naive) | OOT 2007–2008 vintages (honest) |
+|---|---|---|
+| realized default rate | 0.1050 | 0.1619 |
+| mean predicted PD | 0.1309 | 0.1237 |
+| realized / predicted | 0.80 | **1.31** |
+| AUC | 0.8742 | 0.8255 |
+| Brier skill vs climatology | 0.230 | 0.245 |
+
+The pattern that broke real mortgage models in 2008, reproduced end to end:
+**discrimination survives (AUC barely moves) while calibration breaks** — on
+unseen crisis vintages the model sees only ~76% of the risk coming
+(realized/predicted 1.31), and the naive split shows no warning at all (0.80).
+Per-feature PSI attributes the drift to the rate environment (orig_rate 0.20,
+rate_spread 0.13) rather than borrower quality (fico 0.04) — the borrowers
+didn't get worse; the world did.
+
 ## Data access
 
 The Fannie Mae Single-Family Loan Performance data is free but requires
@@ -65,16 +90,25 @@ Nothing in this repo redistributes the data. All tests run on the bundled
 synthetic fixtures; `creditlab demo` reproduces the README numbers from a
 downloaded acquisition/performance file pair.
 
-## Planned CLI
+## CLI
 
 ```
-creditlab ingest <acq_file> <perf_file>   # parse + label + cache
-creditlab train --model logit|gbm         # fit with vintage-aware split
-creditlab validate --oot 2007,2008        # crisis stress validation
-creditlab explain <loan_id>               # adverse-action reason codes
-creditlab tearsheet                       # full HTML report
-creditlab demo                            # end-to-end on synthetic data
+pip install -e ".[gbm]"                    # or plain `pip install -e .`
+creditlab demo                             # end-to-end on synthetic fixtures;
+                                           # verifies the README numbers above
+creditlab ingest <acq_file> <perf_file>    # parse + label + featurize
+creditlab train [--model logit|gbm]        # fit; logistic saves model.json
+creditlab validate [--train-max-vintage N] # crisis OOT validation + PSI
+creditlab explain <loan_id>                # exact adverse-action reason codes
+creditlab tearsheet [--data-note "..."]    # self-contained HTML report
+creditlab fixtures                         # generate synthetic file pairs
 ```
+
+Start with `creditlab demo`: it rebuilds the whole pipeline on the bundled
+synthetic fixtures and checks the recomputed headline numbers against the
+table above, exiting non-zero if anything drifts — the same check runs as a
+unit test. For real data, download a Fannie Mae acquisition/performance pair
+(below) and run `ingest` → `train` → `validate` → `tearsheet`.
 
 ## Relationship to factorlab
 
@@ -85,4 +119,8 @@ validation, reproducible demo numbers.
 
 ---
 
-> **Status: scaffolded, not complete.** This repo was scaffolded from a build spec; see `BUILD_PLAN.md` for the milestones.
+> **Status: v0.1.0 — all 8 build-plan milestones complete** (143 offline tests,
+> CI on Python 3.11/3.12). The results above are synthetic-fixture numbers by
+> design; real-data tables land after a Fannie Mae download via
+> `creditlab ingest/validate/tearsheet`. See `BUILD_PLAN.md` for what each
+> milestone shipped.
