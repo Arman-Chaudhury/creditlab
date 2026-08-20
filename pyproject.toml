@@ -18,6 +18,9 @@ dev = ["pytest>=8.0"]
 # HistGradientBoostingClassifier. macOS additionally needs: brew install libomp
 gbm = ["lightgbm>=4.7"]
 
+[project.scripts]
+creditlab = "creditlab.cli:main"
+
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"

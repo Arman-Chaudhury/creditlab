@@ -90,16 +90,25 @@ Nothing in this repo redistributes the data. All tests run on the bundled
 synthetic fixtures; `creditlab demo` reproduces the README numbers from a
 downloaded acquisition/performance file pair.
 
-## Planned CLI
+## CLI
 
 ```
-creditlab ingest <acq_file> <perf_file>   # parse + label + cache
-creditlab train --model logit|gbm         # fit with vintage-aware split
-creditlab validate --oot 2007,2008        # crisis stress validation
-creditlab explain <loan_id>               # adverse-action reason codes
-creditlab tearsheet                       # full HTML report
-creditlab demo                            # end-to-end on synthetic data
+pip install -e ".[gbm]"                    # or plain `pip install -e .`
+creditlab demo                             # end-to-end on synthetic fixtures;
+                                           # verifies the README numbers above
+creditlab ingest <acq_file> <perf_file>    # parse + label + featurize
+creditlab train [--model logit|gbm]        # fit; logistic saves model.json
+creditlab validate [--train-max-vintage N] # crisis OOT validation + PSI
+creditlab explain <loan_id>                # exact adverse-action reason codes
+creditlab tearsheet [--data-note "..."]    # self-contained HTML report
+creditlab fixtures                         # generate synthetic file pairs
 ```
+
+Start with `creditlab demo`: it rebuilds the whole pipeline on the bundled
+synthetic fixtures and checks the recomputed headline numbers against the
+table above, exiting non-zero if anything drifts — the same check runs as a
+unit test. For real data, download a Fannie Mae acquisition/performance pair
+(below) and run `ingest` → `train` → `validate` → `tearsheet`.
 
 ## Relationship to factorlab
 
@@ -110,4 +119,8 @@ validation, reproducible demo numbers.
 
 ---
 
-> **Status: scaffolded, not complete.** This repo was scaffolded from a build spec; see `BUILD_PLAN.md` for the milestones.
+> **Status: v0.1.0 — all 8 build-plan milestones complete** (143 offline tests,
+> CI on Python 3.11/3.12). The results above are synthetic-fixture numbers by
+> design; real-data tables land after a Fannie Mae download via
+> `creditlab ingest/validate/tearsheet`. See `BUILD_PLAN.md` for what each
+> milestone shipped.
