@@ -161,7 +161,7 @@ def train_gbm(
         )
         clf.fit(
             X[fit_idx], y[fit_idx],
-            eval_set=[(X[val_idx], y[val_idx])],
+            eval_X=X[val_idx], eval_y=y[val_idx],
             eval_metric="binary_logloss",
             callbacks=[lgb.early_stopping(early_stopping_rounds, verbose=False)],
         )

@@ -16,7 +16,7 @@ dependencies = [
 dev = ["pytest>=8.0"]
 # Reference challenger backend; without it train_gbm falls back to sklearn's
 # HistGradientBoostingClassifier. macOS additionally needs: brew install libomp
-gbm = ["lightgbm>=4.0"]
+gbm = ["lightgbm>=4.7"]
 
 [build-system]
 requires = ["setuptools>=68"]

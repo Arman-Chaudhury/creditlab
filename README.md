@@ -57,6 +57,31 @@ proxy fairness audit]
 HTML/Markdown + CLI demo]
 ```
 
+## The headline experiment
+
+`creditlab.validation.crisis_validation` runs the same trainer through both
+protocols — the naive random split and the honest vintage-based out-of-time
+split (train ≤ 2006, validate on 2007–08 originations) — and reports them side
+by side. On the bundled synthetic fixtures (800 loans, seed 99; **not real
+data** — the real-data table lands with `creditlab demo` once you've
+downloaded a Fannie Mae quarter):
+
+| metric | random split (naive) | OOT 2007–2008 vintages (honest) |
+|---|---|---|
+| realized default rate | 0.1050 | 0.1619 |
+| mean predicted PD | 0.1309 | 0.1237 |
+| realized / predicted | 0.80 | **1.31** |
+| AUC | 0.8742 | 0.8255 |
+| Brier skill vs climatology | 0.230 | 0.245 |
+
+The pattern that broke real mortgage models in 2008, reproduced end to end:
+**discrimination survives (AUC barely moves) while calibration breaks** — on
+unseen crisis vintages the model sees only ~76% of the risk coming
+(realized/predicted 1.31), and the naive split shows no warning at all (0.80).
+Per-feature PSI attributes the drift to the rate environment (orig_rate 0.20,
+rate_spread 0.13) rather than borrower quality (fico 0.04) — the borrowers
+didn't get worse; the world did.
+
 ## Data access
 
 The Fannie Mae Single-Family Loan Performance data is free but requires
