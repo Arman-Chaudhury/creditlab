@@ -1,17 +1,21 @@
 # creditlab
 
-**Loan-level mortgage credit risk modeling on real GSE data — stress-tested through the 2008 crisis.**
+**Can a model that predicts which mortgages will go bad still work when the economy falls apart?**
 
-Most student credit-risk projects train on toy Kaggle CSVs. creditlab trains
-probability-of-default (PD) models on the public **Fannie Mae Single-Family Loan
-Performance dataset** — millions of real mortgages with origination features and
-month-by-month payment outcomes — and asks the question that actually matters in
-credit risk: *does a model trained in good times survive a downturn?*
+When someone takes out a mortgage, the lender wants to know how likely that
+person is to stop paying. Banks build models to estimate that, and the models
+usually look great right up until a recession, when they fall apart. That is
+roughly what happened in 2008.
 
-The flagship experiment: train on pre-2007 vintages, validate out-of-time on the
-2007–2008 crisis vintages, and report exactly how calibration degrades. That is
-the failure mode that broke real mortgage models in 2008, reproduced and
-measured on the real data.
+creditlab is my attempt to test that properly. It is built for Fannie Mae's
+public records of real mortgages (millions of loans, with what happened to each
+one month by month). It trains a model on loans from before 2007, then checks
+how well that model holds up on loans from the crisis years. The interesting
+part is not that it gets worse, it is measuring exactly how: the model still
+ranks risky loans above safe ones, but the actual probabilities it gives end up
+way off. That gap is what broke real bank models in 2008. The numbers checked
+in right now come from synthetic test data shaped like the real files; the real
+download plugs straight in.
 
 ## Why this project
 
